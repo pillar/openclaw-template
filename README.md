@@ -26,6 +26,15 @@ This repository holds the optimized OpenClaw context + config files that you can
    ```
    Make sure `qmd-index-sync` is present and heartbeat rules match.
 
+## Routing rules (models/agents)
+- **Step 1: Task classification** – determine whether the request is primarily retrieval (facts/document lookup), analysis/decision writing, or code generation/script execution.
+- **Step 2: Search first** – run `qmd query` or `mq` to gather context snippets before calling any model. Only read files or sections pointed by those snippets.
+- **Step 3: Pick the right model**:
+  - **Code-heavy tasks**: send to the OpenAI Codex agent (`openai-codex/gpt-5.1-codex-mini`) or another code-specialized model.
+  - **Long-form explanations, strategy, summaries**: use GPT-4/Claude-level agents (e.g., `google-antigravity/claude-opus-4-6-thinking`).
+  - **Conversational replies/automation**: default to `gpt-3.5-turbo` or equivalent to save tokens.
+- **Step 4: Final assembly** – have the selected agent polish, merge, and deliver the response; avoid multiple models working on the same artifact unless explicitly requested.
+
 ## Tips
 - If the Windows workspace is on a different path, adjust the `workspace` field inside `openclaw.json` before copying.
 - Keep this repo in sync (pull before making changes) so both machines share the same templates.
