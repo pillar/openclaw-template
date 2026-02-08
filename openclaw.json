@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.6-3",
+    "lastTouchedAt": "2026-02-08T03:33:36.504Z"
+  },
+  "update": {
+    "channel": "stable",
+    "checkOnStart": true
+  },
+  "auth": {
+    "profiles": {
+      "google-antigravity:you@example.com": {
+        "provider": "google-antigravity",
+        "mode": "oauth"
+      },
+      "openai-codex:default": {
+        "provider": "openai-codex",
+        "mode": "oauth"
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai-codex/gpt-5.1-codex-mini",
+        "fallbacks": [
+          "google-antigravity/gemini-3-flash"
+        ]
+      },
+      "workspace": "~/clawd",
+      "contextTokens": 120000,
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "15m",
+        "softTrimRatio": 0.5
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "timeoutSeconds": 60,
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      },
+      "heartbeat": {
+        "every": "45m",
+        "activeHours": {
+          "start": "08:00",
+          "end": "02:00",
+          "timezone": "Asia/Shanghai"
+        },
+        "model": "google-antigravity/gemini-3-flash"
+      }
+    }
+  },
+  "tools": {
+    "media": {
+      "audio": {
+        "enabled": true,
+        "models": [
+          {
+            "type": "cli",
+            "command": "bash",
+            "args": [
+              "-c",
+              "ffmpeg -i {{MediaPath}} -ar 16000 -ac 1 /tmp/clawdbot_voice_$$.wav -y -loglevel error && whisper-cli -m ~/.openclaw/whisper/ggml-base.bin -l auto /tmp/clawdbot_voice_$$.wav 2>/dev/null && rm /tmp/clawdbot_voice_$$.wav"
+            ],
+            "timeoutSeconds": 60
+          }
+        ]
+      }
+    },
+    "elevated": {
+      "enabled": true,
+      "allowFrom": {
+        "whatsapp": [
+          "<YOUR_WHATSAPP_NUMBER>"
+        ]
+      }
+    },
+    "exec": {
+      "security": "full"
+    }
+  },
+  "messages": {
+    "queue": {
+      "mode": "steer-backlog",
+      "debounceMs": 1000,
+      "cap": 10
+    },
+    "inbound": {
+      "debounceMs": 500
+    },
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "hooks": {
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "boot-md": {
+          "enabled": true
+        },
+        "command-logger": {
+          "enabled": true
+        },
+        "session-memory": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "channels": {
+    "whatsapp": {
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "<YOUR_WHATSAPP_NUMBER>",
+        "<YOUR_GROUP_ID_1>",
+        "<YOUR_GROUP_ID_2>"
+      ],
+      "groupPolicy": "allowlist",
+      "mediaMaxMb": 50,
+      "debounceMs": 100
+    },
+    "discord": {
+      "enabled": true,
+      "token": "<DISCORD_TOKEN>",
+      "groupPolicy": "open",
+      "dm": {
+        "enabled": true,
+        "policy": "pairing"
+      }
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "controlUi": {
+      "enabled": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "<GATEWAY_TOKEN>",
+      "allowTailscale": true
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    },
+    "entries": {
+      "apple-notes": {
+        "enabled": false
+      },
+      "apple-reminders": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "bird": {
+        "enabled": false
+      },
+      "nano-pdf": {
+        "enabled": false
+      },
+      "openai-image-gen": {
+        "enabled": false
+      },
+      "openai-whisper-api": {
+        "enabled": false
+      },
+      "peekaboo": {
+        "enabled": false
+      },
+      "session-logs": {
+        "enabled": false
+      },
+      "skill-creator": {
+        "enabled": false
+      },
+      "video-frames": {
+        "enabled": false
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "whatsapp": {
+        "enabled": true
+      },
+      "google-antigravity-auth": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      },
+      "memory-core": {
+        "enabled": true
+      }
+    }
+  }
+}

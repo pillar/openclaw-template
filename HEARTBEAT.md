@@ -1,0 +1,3 @@
+- 批量巡检: Email, Calendar, <OTHER_SERVICES>
+- 仅回报紧急预警或高价值动态，无事回复 HEARTBEAT_OK
+- 记录于 memory/heartbeat-state.json
